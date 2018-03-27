@@ -14,6 +14,8 @@ add_executable(glyph
         FFT/FFT_includes.h
         glp.c
         glp.h
+        sha256.c
+        sha256.h
         glp_consts.h
         glp_consts_1024.h
         glp_rand.c

@@ -53,7 +53,7 @@ int main(){
 
 //  test_seed();
   test_local_imp();
-  return 0;
+//  return 0;
 
   glp_signing_key_t sk;
   glp_public_key_t pk;
