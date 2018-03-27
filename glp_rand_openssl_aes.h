@@ -3,6 +3,8 @@
 #include <inttypes.h>
 #include <assert.h>
 
+extern void printHex(unsigned char *bytes, int count);
+
 #define RANDOM_VARS \
 	AES_KEY aes_key; \
 	unsigned char *_key;\
@@ -14,6 +16,7 @@
 		_key = seed; \
 	} \
 	AES_set_encrypt_key(_key, 128, &aes_key);	\
+    printHex(_key, 16); \
 	unsigned char aes_ivec[AES_BLOCK_SIZE]; \
 	memset(aes_ivec, 0, AES_BLOCK_SIZE); \
 	unsigned char aes_ecount_buf[AES_BLOCK_SIZE]; \

@@ -12,6 +12,12 @@
 #include "glp_utils.h"
 #include "glp_rand_openssl_aes.h"
 
+void printHex(unsigned char *bytes, int count) {
+    for (int i = 0; i < count; ++i) {
+        printf("0x%02x,", bytes[i]);
+    }
+    printf("\n");
+}
 
 /**************************************************************PRINTING AND COPYING******************************************************/
 
