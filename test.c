@@ -12,6 +12,8 @@
 #include "glp.h"
 #include "glp_utils.h"
 #include "test_vectors.h"
+#include "glp_rand_openssl_aes.h"
+
 #define SIGN_TRIALS 1000
 
 static void test_seed() {
@@ -39,10 +41,19 @@ static void test_seed() {
   }
 }
 
+static void test_local_imp() {
+    unsigned char seed[32] = {0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
+                              0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1e, 0x1f};
+    RANDOM_VARS
+    uint64_t r64 = RANDOM64;
+    printf("%lld", r64);
+}
+
 int main(){
 
-  test_seed();
-//  return 0;
+//  test_seed();
+  test_local_imp();
+  return 0;
 
   glp_signing_key_t sk;
   glp_public_key_t pk;
