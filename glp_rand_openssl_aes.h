@@ -1,14 +1,15 @@
-#include <openssl/rand.h>
-#include <openssl/aes.h>
+
+#include "aes.h"
 #include <inttypes.h>
-#include <assert.h>
+
+extern void RAND_bytes(unsigned char *bytes, int count);
 
 #define RANDOM_VARS \
 	AES_KEY aes_key; \
 	unsigned char *_key;\
 	if (!seed) { \
 		unsigned char aes_key_bytes[16]; \
-    	assert (RAND_bytes(aes_key_bytes, 16) != -1);    \
+    	RAND_bytes(aes_key_bytes, 16);    \
 		_key = aes_key_bytes; \
 	} else { \
 		_key = seed; \

@@ -11,6 +11,7 @@
 
 #include "glp_utils.h"
 #include "glp_rand_openssl_aes.h"
+#include "sha256.h"
 
 
 /**************************************************************PRINTING AND COPYING******************************************************/
@@ -101,11 +102,11 @@ int hash(unsigned char hash_output[GLP_DIGEST_LENGTH],
   if ((hash_input = (unsigned char *)malloc(hash_input_bytes)) == NULL) return 0;
   poly2bytes(hash_input,u);
   for(i = 0; i < mulen; i++) hash_input[i + bytesPerPoly] = mu[i];
-  SHA256_CTX sha256;
-  ret = 1;
-  ret &= SHA256_Init(&sha256);
-  ret &= SHA256_Update(&sha256, hash_input, hash_input_bytes);
-  ret &= SHA256_Final(hash_output, &sha256);
+  sha256_context ctx;
+  ret = 0;
+  sha256_init(&ctx);
+  sha256_hash(&ctx, hash_input, hash_input_bytes);
+  sha256_done(&ctx, hash_output);
   free(hash_input);
   return ret;
 }

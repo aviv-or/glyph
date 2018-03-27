@@ -1,4 +1,4 @@
-/* crypto/aes/aes_ctr.c -*- mode:C; c-file-style: "eay" -*- */
+/* crypto/aes/aes.h -*- mode:C; c-file-style: "eay" -*- */
 /* ====================================================================
  * Copyright (c) 1998-2002 The OpenSSL Project.  All rights reserved.
  *
@@ -49,80 +49,52 @@
  *
  */
 
-#ifndef AES_DEBUG
-# ifndef NDEBUG
-#  define NDEBUG
-# endif
+#ifndef HEADER_AES_LOCL_H
+#define HEADER_AES_LOCL_H
+
+//#include <openssl/e_os2.h>
+#include <stdint.h>
+
+#ifdef OPENSSL_NO_AES
+#error AES is disabled.
 #endif
-//#include <aversive.h>
-#include <assert.h>
-#include "aes_locl.h"
-#include "aes.h"
 
-/* NOTE: CTR mode is big-endian.  The rest of the AES code
- * is endian-neutral. */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-/* increment counter (128-bit int) by 2^64 */
-void AES_ctr128_inc(unsigned char *counter) {
-	unsigned long c;
-
-	/* Grab 3rd dword of counter and increment */
-#ifdef L_ENDIAN
-	c = GETU32(counter + 8);
-	c++;
-	PUTU32(counter + 8, c);
+//#define L_ENDIAN
+/*
+#if defined(LITTLE_ENDIAN)
+# define SWAP(x) (_lrotl(x, 8) & 0x00ff00ff | _lrotr(x, 8) & 0xff00ff00)
+# define GETU32(p) SWAP(*((uint32_t *)(p)))
+# define PUTU32(ct, st) { *((uint32_t *)(ct)) = SWAP((st)); }
 #else
-	c = GETU32(counter + 4);
-	c++;
-	PUTU32(counter + 4, c);
+# define GETU32(pt) (((uint32_t)(pt)[0] << 24) ^ ((uint32_t)(pt)[1] << 16) ^ ((uint32_t)(pt)[2] <<  8) ^ ((uint32_t)(pt)[3]))
+# define PUTU32(ct, st) { (ct)[0] = (u8)((st) >> 24); (ct)[1] = (u8)((st) >> 16); (ct)[2] = (u8)((st) >>  8); (ct)[3] = (u8)(st); }
 #endif
+*/
 
-	/* if no overflow, we're done */
-	if (c)
-		return;
+#define GETU32(pt) (((uint32_t)(pt)[0] << 24) ^ ((uint32_t)(pt)[1] << 16) ^ ((uint32_t)(pt)[2] <<  8) ^ ((uint32_t)(pt)[3]))
+#define PUTU32(ct, st) { (ct)[0] = (u8)((st) >> 24); (ct)[1] = (u8)((st) >> 16); (ct)[2] = (u8)((st) >>  8); (ct)[3] = (u8)(st); }
 
-	/* Grab top dword of counter and increment */
-#ifdef L_ENDIAN
-	c = GETU32(counter + 12);
-	c++;
-	PUTU32(counter + 12, c);
-#else
-	c = GETU32(counter +  0);
-	c++;
-	PUTU32(counter +  0, c);
-#endif
+/*
+#define GETU32(pt) (((uint32_t)(pt)[0] << 0) ^ ((uint32_t)(pt)[1] << 8) ^ ((uint32_t)(pt)[2] <<  16) ^ ((uint32_t)(pt)[3]<<  24))
+#define PUTU32(ct, st) { (ct)[0] = (u8)((st) >> 0); (ct)[1] = (u8)((st) >> 8); (ct)[2] = (u8)((st) >>  16); (ct)[3] = (u8)((st) >>  24); }
+*/
+/*
+typedef unsigned long uint32_t;
+typedef unsigned short uint16_t;
+typedef unsigned char u8;
+*/
 
-}
+typedef  uint8_t u8;
 
-/* The input encrypted as though 128bit counter mode is being
- * used.  The extra state information to record how much of the
- * 128bit block we have used is contained in *num, and the
- * encrypted counter is kept in ecount_buf.  Both *num and
- * ecount_buf must be initialised with zeros before the first
- * call to AES_ctr128_encrypt().
- */
-void AES_ctr128_encrypt(const unsigned char *in, unsigned char *out,
-						const unsigned long length, const AES_KEY *key,
-						unsigned char counter[AES_BLOCK_SIZE],
-						unsigned char ecount_buf[AES_BLOCK_SIZE],
-						unsigned int *num) {
+#define MAXKC   (256/32)
+#define MAXKB   (256/8)
+#define MAXNR   14
 
-	unsigned int n;
-	unsigned long l=length;
+/* This controls loop-unrolling in aes_core.c */
+#undef FULL_UNROLL
 
-	assert(in && out && key && counter && num);
-	assert(*num < AES_BLOCK_SIZE);
-
-	n = *num;
-
-	while (l--) {
-		if (n == 0) {
-			AES_encrypt(counter, ecount_buf, key);
-			AES_ctr128_inc(counter);
-		}
-		*(out++) = *(in++) ^ ecount_buf[n];
-		n = (n+1) % AES_BLOCK_SIZE;
-	}
-
-	*num=n;
-}
+#endif /* !HEADER_AES_LOCL_H */

@@ -1,5 +1,11 @@
 #include "glp_rand_openssl_aes.h"
-#include <stdio.h>
+#include <stdlib.h>
+
+void RAND_bytes(unsigned char *bytes, int count) {
+	for (int i = 0; i < count; ++i) {
+		bytes[i] = (unsigned char)(rand() % 0xFF);
+	}
+}
 
 uint64_t randomplease(AES_KEY *aes_key, unsigned char aes_ivec[AES_BLOCK_SIZE],
                       unsigned char aes_ecount_buf[AES_BLOCK_SIZE],
