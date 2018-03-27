@@ -55,7 +55,7 @@ typedef struct glp_signature_st glp_signature_t;
 #define NEG(A) ((Q - (A)) % Q)
 
 /* Internal function prototypes */
-void glp_gen_sk(glp_signing_key_t *sk);
+void glp_gen_sk(glp_signing_key_t *sk, unsigned char seed[32]);
 void glp_gen_pk(glp_public_key_t *pk,glp_signing_key_t sk);
 RINGELT abs_low_bits(RINGELT x);
 int glp_sign(glp_signature_t *sig,

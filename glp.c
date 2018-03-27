@@ -18,9 +18,9 @@
 /***********************************************SIGNING KEY GENERATION********************************/
 
 /*generates signing key (s1,s2), stored in physical form */
-void glp_gen_sk(glp_signing_key_t *sk){    
-    sample_glp_secret(sk->s1);
-    sample_glp_secret(sk->s2);
+void glp_gen_sk(glp_signing_key_t *sk, unsigned char seed[32]){
+    sample_glp_secret(sk->s1, seed);
+    sample_glp_secret(sk->s2, seed ? seed + 16 : NULL);
 }
 
 
@@ -56,7 +56,8 @@ int glp_sign(glp_signature_t *sig,
   RINGELT y1[N]={0}, y2[N] ={0};
   int success = 0;
   uint16_t i, sign_iters = 0;
- 
+
+  unsigned char *seed = NULL;
   /*initialise random sampling for y1,y2*/
   RANDOM_VARS
   /*sample y1,y2 randomly, and repeat until they pass rejection sampling*/

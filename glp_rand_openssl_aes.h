@@ -5,9 +5,15 @@
 
 #define RANDOM_VARS \
 	AES_KEY aes_key; \
-	unsigned char aes_key_bytes[16]; \
-	assert (RAND_bytes(aes_key_bytes, 16)!=-1);	\
-	AES_set_encrypt_key(aes_key_bytes, 128, &aes_key);	\
+	unsigned char *_key;\
+	if (!seed) { \
+		unsigned char aes_key_bytes[16]; \
+    	assert (RAND_bytes(aes_key_bytes, 16) != -1);    \
+		_key = aes_key_bytes; \
+	} else { \
+		_key = seed; \
+	} \
+	AES_set_encrypt_key(_key, 128, &aes_key);	\
 	unsigned char aes_ivec[AES_BLOCK_SIZE]; \
 	memset(aes_ivec, 0, AES_BLOCK_SIZE); \
 	unsigned char aes_ecount_buf[AES_BLOCK_SIZE]; \

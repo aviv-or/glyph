@@ -12,5 +12,5 @@
 #define GLP_RAND_H
 
 #include "glp.h"
-void sample_glp_secret(RINGELT f[N]);
+void sample_glp_secret(RINGELT f[N], unsigned char *seed);
 #endif

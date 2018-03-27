@@ -13,7 +13,7 @@
 #include "glp_rand_openssl_aes.h"
 
 
-void sample_glp_secret(RINGELT f[N]){
+void sample_glp_secret(RINGELT f[N], unsigned char *seed){
   uint64_t rand64;
   uint16_t rand2;
   uint16_t rand_bits_used = 0;
