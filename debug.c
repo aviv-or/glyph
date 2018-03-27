@@ -13,7 +13,7 @@ void printHex(unsigned char *bytes, int count) {
 void print_poly(const RINGELT f[N]){
     uint16_t i;
     for(i = 0; i < N ; i++){
-        printf("%ld ", 2*f[i] < Q ? f[i] : f[i] - Q );
+        printf("%ld ", 2*f[i] < Q ? f[i] : (long)f[i] - Q );
     }
     printf("\n");
 }
