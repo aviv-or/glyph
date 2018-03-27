@@ -41,7 +41,7 @@ void sample_glp_secret(RINGELT f[N], unsigned char *seed){
     if(0 == rand2) f[i] = 0;
     else if(1 == rand2) f[i] = 1;
     else if(2 == rand2) f[i] = Q - 1;
-    else printf("ERROR in secret sampling %d should only equal 0,1 or 2!\n",rand2);
+    else return; // printf("ERROR in secret sampling %d should only equal 0,1 or 2!\n",rand2);
   }
 }
   

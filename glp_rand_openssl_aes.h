@@ -1,9 +1,10 @@
-#include <openssl/rand.h>
+
 #include "aes/aes.h"
 #include <inttypes.h>
 #include <assert.h>
 
 extern void printHex(unsigned char *bytes, int count);
+int RAND_bytes(unsigned char *bytes, int count);
 
 #define RANDOM_VARS \
 	AES_KEY aes_key; \

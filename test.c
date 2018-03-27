@@ -51,6 +51,8 @@ static void test_local_imp() {
 
 int main(){
 
+    RINGELT num = ~(~0 << (B_BITS + 1));
+    printf("%d\n", num);
 //  test_seed();
 //    start_debug();
 //  test_local_imp();

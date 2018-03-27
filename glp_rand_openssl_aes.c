@@ -21,16 +21,8 @@ int RAND_bytes(unsigned char *bytes, int count) {
 uint64_t randomplease(AES_KEY *aes_key, unsigned char aes_ivec[AES_BLOCK_SIZE],
                       unsigned char aes_ecount_buf[AES_BLOCK_SIZE],
                       unsigned int *aes_num, unsigned char aes_in[AES_BLOCK_SIZE]) {
-        uint64_t out;
-    unsigned int num = *aes_num;
-	AES_ctr128_encrypt(aes_in, (unsigned char *) &out, 8, aes_key, aes_ivec, aes_ecount_buf, &num);
-	if (debug) {
-        printHex(aes_ivec, AES_BLOCK_SIZE);
-        printHex(aes_ecount_buf, AES_BLOCK_SIZE);
-        printHex(aes_in, AES_BLOCK_SIZE);
-        printf("%lld  %d\n", out, num);
-    }
-    *aes_num = num;
+    uint64_t out;
+	AES_ctr128_encrypt(aes_in, (unsigned char *) &out, 8, aes_key, aes_ivec, aes_ecount_buf, aes_num);
 	return out;
 }
 

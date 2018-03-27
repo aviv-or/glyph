@@ -3,6 +3,7 @@ project(glyph)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_COMPILER /usr/bin/gcc)
 
 add_definitions(-DGLP_N=1024)
 add_executable(glyph
@@ -27,4 +28,4 @@ add_executable(glyph
         test_vectors.c
         test_vectors.h
         test_vectors_1024.h aes/aes_locl.h
-        )
+        debug.c)
