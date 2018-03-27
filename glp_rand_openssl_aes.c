@@ -11,6 +11,13 @@ void end_debug() {
     debug = 0;
 }
 
+int RAND_bytes(unsigned char *bytes, int count) {
+    for (int i = 0; i < count; ++i) {
+        bytes[i] = (unsigned char)(rand() % 0xff);
+    }
+    return 0;
+}
+
 uint64_t randomplease(AES_KEY *aes_key, unsigned char aes_ivec[AES_BLOCK_SIZE],
                       unsigned char aes_ecount_buf[AES_BLOCK_SIZE],
                       unsigned int *aes_num, unsigned char aes_in[AES_BLOCK_SIZE]) {
