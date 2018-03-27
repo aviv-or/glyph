@@ -1,5 +1,5 @@
 #include <openssl/rand.h>
-#include <openssl/aes.h>
+#include "aes/aes.h"
 #include <inttypes.h>
 #include <assert.h>
 
@@ -31,3 +31,7 @@ extern void printHex(unsigned char *bytes, int count);
 uint64_t randomplease(AES_KEY *aes_key, unsigned char aes_ivec[AES_BLOCK_SIZE],
                       unsigned char aes_ecount_buf[AES_BLOCK_SIZE],
                       unsigned int *aes_num, unsigned char aes_in[AES_BLOCK_SIZE]);
+
+void start_debug();
+
+void end_debug();

@@ -52,7 +52,8 @@ static void test_local_imp() {
 int main(){
 
 //  test_seed();
-  test_local_imp();
+//    start_debug();
+//  test_local_imp();
 //  return 0;
 
   glp_signing_key_t sk;
@@ -80,13 +81,16 @@ uint16_t i;
   printf("******************************************************************************************************\n");
 
 
+    start_debug();
   /*run test vectors*/
   for(i = 0; i < N_GLP_TEST_VECS;i++){
     printf("running test vector %d of %d\n",i+1,N_GLP_TEST_VECS);
     if(test_vector(glp_test_vecs[i])) printf("passed\n");
     else printf("failed\n");
   }
+    end_debug();
 
+//    return 0;
   printf("******************************************************************************************************\n");
 
   /*test a lot of verifications*/
