@@ -1,5 +1,4 @@
 #include "glp_rand_openssl_aes.h"
-#include <stdio.h>
 #include <stdlib.h>
 
 static int debug = 0;
