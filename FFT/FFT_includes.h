@@ -17,7 +17,12 @@
 
 #define FFTLONG uint_fast64_t
 #define PRIuFFTLONG PRIuFAST64
+#if __x86_64__
+#define FFTSHORT uint_fast64_t
+#else
 #define FFTSHORT uint_fast32_t
+#endif
+
 #define PRIuFFTSHORT PRIuFAST32
 
 #define ADD(x, a, b) \
