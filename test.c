@@ -53,7 +53,7 @@ int main(){
 //    start_debug();
 //  test_local_imp();
 //  return 0;
-
+printf("size: %d %d %d %d %d\n", sizeof(uint16_t), sizeof(glp_signing_key_t), sizeof(glp_public_key_t), sizeof(glp_signature_t), sizeof(uint_fast16_t));
   glp_signing_key_t sk;
   glp_public_key_t pk;
   char *message = "testtest";
