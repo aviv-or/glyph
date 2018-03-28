@@ -9,6 +9,12 @@
 
 typedef unsigned char byte;
 
+size_t glyph_private_keysize();
+
+size_t glyph_public_keysize();
+
+size_t glyph_signature_size();
+
 void glyph_gen_keypair(byte *privateKey, byte *publicKey, const byte* seed);
 
 int glyph_sign(byte *signature, const byte *message, size_t messageLength, const byte *privateKey);

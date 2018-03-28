@@ -13,13 +13,13 @@
 unsigned char seed[32] = {0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
                           0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1e, 0x1f};
 static void test_seed() {
-    byte *sk = malloc(sizeof(glp_signing_key_t));
-    byte *pk = malloc(sizeof(glp_public_key_t));
+    byte *sk = malloc(glyph_private_keysize());
+    byte *pk = malloc(glyph_public_keysize());
     glyph_gen_keypair(sk, pk, seed);
 
     const char *message = "testtest";
 
-    byte *signature = malloc(sizeof(glp_signature_t));
+    byte *signature = malloc(glyph_signature_size());
     glyph_sign(signature, message, strlen(message), sk);
 
     int ret = glyph_verify(message, strlen(message), signature, pk);
@@ -64,9 +64,9 @@ int main(){
 
     /*test a lot of verifications*/
     printf("trying %d independent keygen/sign/verifies\n", SIGN_TRIALS);
-    byte *skLooper = malloc(sizeof(glp_signing_key_t));
-    byte *pkLooper = malloc(sizeof(glp_public_key_t));
-    byte *sigLooper = malloc(sizeof(glp_signature_t));
+    byte *skLooper = malloc(glyph_private_keysize());
+    byte *pkLooper = malloc(glyph_public_keysize());
+    byte *sigLooper = malloc(glyph_signature_size());
 
     for(i=0; i < SIGN_TRIALS; i++){
         glyph_gen_keypair(skLooper, pkLooper, NULL);
