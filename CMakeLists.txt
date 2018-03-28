@@ -29,7 +29,7 @@ add_executable(glyph
         test_vectors.c
         test_vectors.h
         test_vectors_1024.h
-        debug.c)
+        debug.c glyph.c glyph.h test/test_glyph.c test/test_glyph.h)
 
 add_library(glp
         FFT/FFT_1024_59393.c
@@ -49,4 +49,8 @@ add_library(glp
         glp_rand_openssl_aes.h
         glp_utils.c
         glp_utils.h
-        aes/aes_locl.h)
+        aes/aes_locl.h
+        glyph.c glyph.h)
+
+add_executable(test_glyph test/test_glyph.c debug.c test_vectors.c)
+target_link_libraries(test_glyph glp)

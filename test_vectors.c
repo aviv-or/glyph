@@ -9,6 +9,7 @@
  */
 
 #include "test_vectors.h"
+#include <stdio.h>
 
 int test_vector(glp_test_vec_t vec){
   int success = 1;

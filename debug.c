@@ -2,6 +2,7 @@
 // Created by Isaac on 2018/3/27.
 //
 #include "glp_utils.h"
+#include <stdio.h>
 
 void printHex(unsigned char *bytes, int count) {
     for (int i = 0; i < count; ++i) {
