@@ -6,15 +6,18 @@
 #include "glp.h"
 
 size_t glyph_private_keysize() {
-    return sizeof(uint16_t) * N * 2;
+     return sizeof(glp_signing_key_t);
+//    return sizeof(uint16_t) * N * 2;
 }
 
 size_t glyph_public_keysize() {
-    return sizeof(uint16_t) * N * 2;
+    return sizeof(glp_public_key_t);
+    //return sizeof(uint16_t) * N * 2;
 }
 
 size_t glyph_signature_size() {
-    return sizeof(uint16_t) * N * 2 + sizeof(uint16_t) * OMEGA * 2;
+    return sizeof(glp_signature_t);
+//    return sizeof(uint16_t) * N * 2 + sizeof(uint16_t) * OMEGA * 2;
 }
 
 // converters
@@ -75,6 +78,7 @@ void glyph_gen_keypair(byte *privateKey, byte *publicKey, const byte* seed) {
     glp_public_key_t pk;
     glp_gen_sk(&sk, seed);
     glp_gen_pk(&pk, sk);
+//    glyp_toBuffer(&sk, privateKey, N);
     memcpy(privateKey, &sk, sizeof(sk));
     memcpy(publicKey, &pk, sizeof(pk));
 }
@@ -82,6 +86,7 @@ void glyph_gen_keypair(byte *privateKey, byte *publicKey, const byte* seed) {
 int glyph_sign(byte *signature, const byte *message, size_t messageLength, const byte *privateKey) {
     glp_signature_t sig;
     glp_signing_key_t sk;
+//    glyp_fromBuffer(privateKey, &sk, N);
     memcpy(&sk, privateKey, sizeof(sk));
     int ret = glp_sign(&sig, sk, message, messageLength);
     memcpy(signature, &sig, sizeof(sig));
