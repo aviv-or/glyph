@@ -22,12 +22,13 @@ static void test_seed() {
     byte *signature = malloc(glyph_signature_size());
     glyph_sign(signature, message, strlen(message), sk);
 
-    int ret = glyph_verify(message, strlen(message), signature, pk);
+    int ok = glyph_verify(message, strlen(message), signature, pk);
 
-    if(!ret) {
-        printf("failed to verify\n");
-    } else {
+    if(ok) {
+        printHex(sk, N * 2);
         printf("verify ok\n");
+    } else {
+        printf("failed to verify\n");
     }
 
     free(sk);
@@ -35,50 +36,15 @@ static void test_seed() {
     free(signature);
 }
 
-static byte *encodePrivateKey(const RINGELT *array, int count) {
-    byte *buffer = malloc(sizeof(byte) * count);
-    for (int i = 0; i < count; ++i) {
-        RINGELT n = 2 * array[i] < Q ? array[i] : array[i] - Q;
-        if (n < 0) {
-            buffer[i] = n + 3;
-        } else {
-            buffer[i] = (byte)n;
-        }
-    }
-    return buffer;
-}
-
-static void decodePrivateKeyFromBuffer(RINGELT *array, int count, const byte *buffer) {
-    for (int i = 0; i < count; ++i) {
-        byte n = buffer[i];
-        if (n > 1) {
-            array[i] = Q + n - 3;
-        } else {
-            array[i] = n;
-        }
-    }
-}
-
 int main(){
 
   test_seed();
+//    return 0;
 //    start_debug();
   glp_signing_key_t sk;
     glp_public_key_t pk;
     char *message = "testtest";
     glp_signature_t sig;
-
-    byte *buffer = encodePrivateKey(&sk, N * 2);
-    printHex(buffer, N * 2);
-
-    glp_signing_key_t sk2;
-    decodePrivateKeyFromBuffer(&sk2, N * 2, buffer);
-
-    if(memcmp(&sk, &sk2, sizeof(glp_signing_key_t)) == 0) {
-        printf("equal!!!\n");
-    }
-
-    free(buffer);
 
     /*print a single example*/
     printf("example signature");
@@ -90,9 +56,14 @@ int main(){
     print_sk(sk);
     printf("\npublic key:\n");
     print_pk(pk);
-    glp_sign(&sig, sk,(unsigned char *)message,strlen(message));
-    printf("\nsignature:\n");
-    print_sig(sig);
+    if(glp_sign(&sig, sk,(unsigned char *)message,strlen(message))) {
+        printf("\nsignature:\n");
+        print_sig(sig);
+    }
+
+    if (glp_verify(sig, pk, message, strlen(message))) {
+        printf("verify ok!\n");
+    }
 
     uint16_t i;
 
