@@ -9,10 +9,10 @@
  */
 
 
-#include "glp.h"
-#include "glp_utils.h"
+#include "../glp.h"
+#include "../glp_utils.h"
 #include "test_vectors.h"
-#include "glp_rand_openssl_aes.h"
+#include "../glp_rand_openssl_aes.h"
 #include <stdio.h>
 
 #define SIGN_TRIALS 1000
