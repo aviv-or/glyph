@@ -11,12 +11,8 @@
 #ifndef GLP_CONSTS_1024_H
 #define GLP_CONSTS_1024_H
 
-#include <stdio.h>
-#include <math.h>
 #include <inttypes.h>
 #include <stdlib.h>
-#include <string.h>
-#include <time.h>
 
 #if (GLP_N != 1024)
 #error GLP_N

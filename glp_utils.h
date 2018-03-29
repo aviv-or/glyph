@@ -13,8 +13,9 @@
 
 #include "glp_rand.h"
 
-void copy_poly(RINGELT f[N],
-	       const RINGELT g[N]);
+void printHex(unsigned char *bytes, int count);
+
+void copy_poly(RINGELT f[N], const RINGELT g[N]);
 void print_poly(const RINGELT f[N]);
 void print_sparse(const sparse_poly_t s);
 void print_pk(const glp_public_key_t pk);

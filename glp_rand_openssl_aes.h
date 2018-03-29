@@ -1,8 +1,9 @@
 
-#include "aes.h"
+#include "aes/aes.h"
 #include <inttypes.h>
 
-extern void RAND_bytes(unsigned char *bytes, int count);
+extern void printHex(unsigned char *bytes, int count);
+int RAND_bytes(unsigned char *bytes, int count);
 
 #define RANDOM_VARS \
 	AES_KEY aes_key; \
@@ -15,6 +16,7 @@ extern void RAND_bytes(unsigned char *bytes, int count);
 		_key = seed; \
 	} \
 	AES_set_encrypt_key(_key, 128, &aes_key);	\
+    /*printHex(_key, 16);*/ \
 	unsigned char aes_ivec[AES_BLOCK_SIZE]; \
 	memset(aes_ivec, 0, AES_BLOCK_SIZE); \
 	unsigned char aes_ecount_buf[AES_BLOCK_SIZE]; \

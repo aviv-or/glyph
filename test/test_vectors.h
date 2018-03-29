@@ -11,8 +11,8 @@
 #ifndef GLP_TEST_VECTORS_H
 #define GLP_TEST_VECTORS_H
 
-#include "glp.h"
-#include "glp_utils.h"
+#include "../glp.h"
+#include "../glp_utils.h"
 
 struct glp_test_vec_st{
   glp_public_key_t pk;

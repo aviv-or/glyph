@@ -9,14 +9,17 @@
  */
 
 
-#include "glp.h"
-#include "glp_utils.h"
+#include "../glp.h"
+#include "../glp_utils.h"
 #include "test_vectors.h"
-#define SIGN_TRIALS 1000
+#include "../glp_rand_openssl_aes.h"
+#include <stdio.h>
 
+#define SIGN_TRIALS 1000
+unsigned char seed[32] = {0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
+                          0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1e, 0x1f};
 static void test_seed() {
-  unsigned char seed[32] = {0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
-                            0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1e, 0x1f};
+
   glp_signing_key_t sk;
   glp_gen_sk(&sk, seed);
   printf("sk1:\n");
@@ -39,11 +42,19 @@ static void test_seed() {
   }
 }
 
+static void test_local_imp() {
+    RANDOM_VARS
+    uint64_t r64 = RANDOM64;
+    printf("%lld", r64);
+}
+
 int main(){
 
-  test_seed();
+//  test_seed();
+//    start_debug();
+//  test_local_imp();
 //  return 0;
-
+printf("size: %d %d %d %d %d\n", sizeof(uint16_t), sizeof(glp_signing_key_t), sizeof(glp_public_key_t), sizeof(glp_signature_t), sizeof(uint_fast16_t));
   glp_signing_key_t sk;
   glp_public_key_t pk;
   char *message = "testtest";
@@ -53,7 +64,7 @@ int main(){
   printf("example signature");
   printf("\nmessage:\n");
   printf("%s\n",message);
-  glp_gen_sk(&sk, NULL);
+  glp_gen_sk(&sk, seed);
   glp_gen_pk(&pk, sk);
   printf("\nsigning key:\n");
   print_sk(sk);
@@ -69,13 +80,16 @@ uint16_t i;
   printf("******************************************************************************************************\n");
 
 
+    start_debug();
   /*run test vectors*/
   for(i = 0; i < N_GLP_TEST_VECS;i++){
     printf("running test vector %d of %d\n",i+1,N_GLP_TEST_VECS);
     if(test_vector(glp_test_vecs[i])) printf("passed\n");
     else printf("failed\n");
   }
+    end_debug();
 
+//    return 0;
   printf("******************************************************************************************************\n");
 
   /*test a lot of verifications*/
