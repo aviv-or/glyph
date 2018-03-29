@@ -15,7 +15,7 @@ unsigned char seed[32] = {0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb,
 
 static void printInt(int16_t *bytes, int count) {
     for (int i = 0; i < count; ++i) {
-        printf("%d,", bytes[i]);
+        printf("%d, ", bytes[i]);
     }
     printf("\n");
 }
@@ -47,12 +47,48 @@ static void test_seed() {
     free(signature);
 }
 
+extern void encodeSignature(const glp_signature_t *sig, void *buffer);
+
+extern void decodeSignature(glp_signature_t *sig, const void* buffer);
+
+static void test_signature_encode() {
+
+    glp_signing_key_t sk;
+    glp_public_key_t pk;
+    char *message = "testtest";
+    glp_signature_t sig;
+
+    /*print a single example*/
+    glp_gen_sk(&sk, seed);
+    glp_gen_pk(&pk, sk);
+
+    if(glp_sign(&sig, sk,(unsigned char *)message,strlen(message))) {
+        printf("\nsignature:\n");
+        print_sig(sig);
+
+        int16_t *buffer = malloc(sizeof(int16_t) * N * 2 + sizeof(uint16_t) * OMEGA * 2);
+        encodeSignature(&sig, buffer);
+
+//        printInt(buffer, N);
+//        printInt(buffer + N, N);
+//        printInt(buffer + 2 * N, OMEGA);
+//        printInt(buffer + 2 * N + OMEGA, OMEGA);
+        glp_signature_t sig2;
+        decodeSignature(&sig2, buffer);
+        print_sig(sig2);
+
+        if (memcmp(&sig, &sig2, sizeof(glp_signature_t)) == 0) {
+            printf("encode ok!");
+        }
+    }
+}
+
 int main(){
 
-  test_seed();
-//    return 0;
-//    start_debug();
-  glp_signing_key_t sk;
+    test_seed();
+    test_signature_encode();
+
+    glp_signing_key_t sk;
     glp_public_key_t pk;
     char *message = "testtest";
     glp_signature_t sig;

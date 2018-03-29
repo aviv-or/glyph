@@ -14,14 +14,30 @@ size_t glyph_public_keysize() {
 }
 
 size_t glyph_signature_size() {
-    return sizeof(glp_signature_t);
-//    return sizeof(uint16_t) * N * 2 + sizeof(uint16_t) * OMEGA * 2;
+    return sizeof(int16_t) * N * 2 + sizeof(int16_t) * OMEGA * 2;
 }
 
+static inline RINGELT convert(RINGELT v) {
+    return 2 * v < Q ? v : v - Q;
+}
 
+static inline RINGELT recover(RINGELT v) {
+    if ((int64_t)v < 0) {
+        return Q + v;
+    } else {
+        return v;
+    }
+}
+
+/**
+ * encode private key to byte buffer
+ * @param array
+ * @param count
+ * @param buffer
+ */
 static void encodePrivateKey(const RINGELT *array, int count, byte * buffer) {
     for (int i = 0; i < count; ++i) {
-        RINGELT n = 2 * array[i] < Q ? array[i] : array[i] - Q;
+        RINGELT n = convert(array[i]);
         buffer[i] = (byte)n;
     }
 }
@@ -37,11 +53,16 @@ static void decodePrivateKeyFromBuffer(RINGELT *array, int count, const byte *bu
     }
 }
 
+/**
+ * encode public key to byte buffer
+ * @param pk
+ * @param count
+ * @param buffer
+ */
 static void encodePublicKey(const RINGELT *pk, int count, byte *buffer) {
     int16_t *b = buffer;
     for (int i = 0; i < count; ++i) {
-        RINGELT n = pk[i];
-        n = 2 * n < Q ? n : n - Q;
+        RINGELT n = convert(pk[i]);
         b[i] = (int16_t)n;
     }
 }
@@ -58,6 +79,46 @@ static void decodePublicKey(RINGELT *pk, int count, const byte *buffer) {
     }
 }
 
+void encodeSignature(const glp_signature_t *sig, void *buffer) {
+    int16_t *b = buffer;
+    for (int i = 0; i < N; ++i) {
+        b[i] = (int16_t)convert(sig->z1[i]);
+    }
+    b = b + N;
+    for (int i = 0; i < N; ++i) {
+        b[i] = (int16_t)convert(sig->z2[i]);
+    }
+    b = b + N;
+    uint16_t *ext = b;
+    for (int i = 0; i < OMEGA; ++i) {
+        ext[i] = sig->c.pos[i];
+    }
+    ext = ext + OMEGA;
+    for (int i = 0; i < OMEGA; ++i) {
+        ext[i] = sig->c.sign[i];
+    }
+}
+
+void decodeSignature(glp_signature_t *sig, const void* buffer) {
+    int16_t *b = buffer;
+    for (int i = 0; i < N; ++i) {
+        sig->z1[i] = recover(b[i]);
+    }
+    b = b + N;
+    for (int i = 0; i < N; ++i) {
+        sig->z2[i] = recover(b[i]);
+    }
+    b = b + N;
+    uint16_t *ext = b;
+    for (int i = 0; i < OMEGA; ++i) {
+        sig->c.pos[i] = ext[i];
+    }
+    ext = ext + OMEGA;
+    for (int i = 0; i < OMEGA; ++i) {
+        sig->c.sign[i] = ext[i];
+    }
+}
+
 void glyph_gen_keypair(byte *privateKey, byte *publicKey, const byte* seed) {
     glp_signing_key_t sk;
     glp_public_key_t pk;
@@ -70,17 +131,16 @@ void glyph_gen_keypair(byte *privateKey, byte *publicKey, const byte* seed) {
 int glyph_sign(byte *signature, const byte *message, size_t messageLength, const byte *privateKey) {
     glp_signature_t sig;
     glp_signing_key_t sk;
-//    glyp_fromBuffer(privateKey, &sk, N);
     decodePrivateKeyFromBuffer(&sk, N * 2, privateKey);
     int ret = glp_sign(&sig, sk, message, messageLength);
-    memcpy(signature, &sig, sizeof(sig));
+    encodeSignature(&sig, signature);
     return ret;
 }
 
 int glyph_verify(const byte *message, size_t messageLength, const byte *signature, const byte *publicKey) {
     glp_signature_t sig;
     glp_public_key_t pk;
-    memcpy(&sig, signature, sizeof(sig));
+    decodeSignature(&sig, signature);
     decodePublicKey(&pk, N, publicKey);
     return glp_verify(sig, pk, message, messageLength);
 }
