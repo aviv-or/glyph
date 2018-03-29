@@ -13,7 +13,7 @@ LIB =
 
 #make target lib and relevant obj
 PRG = libglyph.a
-SRCS = glp.c glp_utils.c glp_rand.c sha256.c glp_rand_openssl_aes.c FFT/FFT_1024_59393.c aes/aes_core.c aes/aes_ctr.c
+SRCS = glp.c glyph.c glp_utils.c glp_rand.c sha256.c glp_rand_openssl_aes.c FFT/FFT_1024_59393.c aes/aes_core.c aes/aes_ctr.c
 OBJ := ${SRCS:.c=.o}
 
 #all target

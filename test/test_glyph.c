@@ -70,7 +70,7 @@ static void test_signature_encode() {
         encodeSignature(&sig, buffer);
 
 //        printInt(buffer, N);
-//        printInt(buffer + N, N);
+//        printHex((byte *)(buffer + N), N);
 //        printInt(buffer + 2 * N, OMEGA);
 //        printInt(buffer + 2 * N + OMEGA, OMEGA);
         glp_signature_t sig2;
@@ -87,7 +87,7 @@ int main(){
 
     test_seed();
     test_signature_encode();
-
+//    return 0;
     glp_signing_key_t sk;
     glp_public_key_t pk;
     char *message = "testtest";
@@ -122,18 +122,20 @@ int main(){
     byte *pkLooper = malloc(glyph_public_keysize());
     byte *sigLooper = malloc(glyph_signature_size());
 
-    for(i=0; i < SIGN_TRIALS; i++){
+    for(i=1; i < SIGN_TRIALS; i++){
         glyph_gen_keypair(skLooper, pkLooper, NULL);
 
         if(!glyph_sign(sigLooper, (unsigned char *)message, strlen(message), skLooper)){
             printf("signature failure round %d!\n",i);
         }
+//        printHex((int16_t *)sigLooper + N, N);
         if(!glyph_verify((unsigned char *)message,strlen(message), sigLooper, pkLooper)) {
             printf("verification failure round %d!\n",i);
             return 1;
         }
         if(!(i % 100)){
             printf("passed trial %d\n",i);
+//            break;
         }
     }
 

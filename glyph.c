@@ -14,11 +14,28 @@ size_t glyph_public_keysize() {
 }
 
 size_t glyph_signature_size() {
-    return sizeof(int16_t) * N * 2 + sizeof(int16_t) * OMEGA * 2;
+    // | z1 | z2 | c |
+    return sizeof(int16_t) * N + sizeof(byte) * N + sizeof(int16_t) * OMEGA * 2;
 }
 
 static inline RINGELT convert(RINGELT v) {
     return 2 * v < Q ? v : v - Q;
+}
+
+static inline byte convert_z2(RINGELT v) {
+    if (0 == v) {
+        return v;
+    } else if (2 * v < Q) {
+        return 1;
+    } else {
+        return 2;
+    }
+}
+
+static RINGELT kConvertMap[] = {0, 16367, Q -16367};
+
+static inline RINGELT recover_z2(byte v) {
+    return kConvertMap[v];
 }
 
 static inline RINGELT recover(RINGELT v) {
@@ -85,10 +102,11 @@ void encodeSignature(const glp_signature_t *sig, void *buffer) {
         b[i] = (int16_t)convert(sig->z1[i]);
     }
     b = b + N;
+    byte *z2 = b;
     for (int i = 0; i < N; ++i) {
-        b[i] = (int16_t)convert(sig->z2[i]);
+        z2[i] = convert_z2(sig->z2[i]);
     }
-    b = b + N;
+    b = (void *)(z2 + N);
     uint16_t *ext = b;
     for (int i = 0; i < OMEGA; ++i) {
         ext[i] = sig->c.pos[i];
@@ -105,10 +123,11 @@ void decodeSignature(glp_signature_t *sig, const void* buffer) {
         sig->z1[i] = recover(b[i]);
     }
     b = b + N;
+    byte *z2 = b;
     for (int i = 0; i < N; ++i) {
-        sig->z2[i] = recover(b[i]);
+        sig->z2[i] = recover_z2(z2[i]);
     }
-    b = b + N;
+    b = (void *)(z2 + N);
     uint16_t *ext = b;
     for (int i = 0; i < OMEGA; ++i) {
         sig->c.pos[i] = ext[i];
