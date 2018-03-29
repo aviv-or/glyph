@@ -33,6 +33,7 @@ static void test_seed() {
     int ok = glyph_verify(message, strlen(message), signature, pk);
 
     printInt(pk, N);
+
     if(ok) {
         printHex(sk, N);
         printf("verify ok\n");

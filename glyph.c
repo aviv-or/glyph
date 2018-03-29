@@ -10,7 +10,7 @@ size_t glyph_private_keysize() {
 }
 
 size_t glyph_public_keysize() {
-    return sizeof(int32_t) * N;
+    return sizeof(int16_t) * N;
 }
 
 size_t glyph_signature_size() {
@@ -38,32 +38,23 @@ static void decodePrivateKeyFromBuffer(RINGELT *array, int count, const byte *bu
 }
 
 static void encodePublicKey(const RINGELT *pk, int count, byte *buffer) {
-    int32_t *b = buffer;
+    int16_t *b = buffer;
     for (int i = 0; i < count; ++i) {
-        b[i] = (int32_t)pk[i];
+        RINGELT n = pk[i];
+        n = 2 * n < Q ? n : n - Q;
+        b[i] = (int16_t)n;
     }
 }
 
 static void decodePublicKey(RINGELT *pk, int count, const byte *buffer) {
-    int32_t *b = buffer;
+    int16_t *b = buffer;
     for (int i = 0; i < count; ++i) {
-        pk[i] = b[i];
-    }
-}
-
-// converters
-
-static void glyp_toBuffer(const RINGELT *obj, byte *buffer, int count) {
-    uint16_t *dest = buffer;
-    for (int i = 0; i < count; ++i) {
-        dest[i] = obj[i];
-    }
-}
-
-static void glyp_fromBuffer(const byte *buffer, RINGELT *obj, int count) {
-    uint16_t *src = buffer;
-    for (int i = 0; i < count; ++i) {
-        obj[i] = src[i];
+        int16_t n = b[i];
+        if (n < 0) {
+            pk[i] = Q + n;
+        } else {
+            pk[i] = n;
+        }
     }
 }
 
