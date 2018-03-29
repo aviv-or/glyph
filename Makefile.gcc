@@ -2,7 +2,7 @@
 # Makefile for static library.
 #############################################################
 #set your own environment option
-CC = gcc
+CC = clang
 CC_FLAG = -O3 -Wall -Wextra -std=gnu99 -pedantic -Wfatal-errors -DGLP_N=1024
 
 
