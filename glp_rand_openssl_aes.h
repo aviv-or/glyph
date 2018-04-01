@@ -1,16 +1,16 @@
 
 #include "aes/aes.h"
+#include "randombytes/randombytes.h"
 #include <inttypes.h>
 
 extern void printHex(unsigned char *bytes, int count);
-int RAND_bytes(unsigned char *bytes, int count);
 
 #define RANDOM_VARS \
 	AES_KEY aes_key; \
 	unsigned char *_key;\
 	if (!seed) { \
 		unsigned char aes_key_bytes[16]; \
-    	RAND_bytes(aes_key_bytes, 16);    \
+    	randombytes(aes_key_bytes, 16);    \
 		_key = aes_key_bytes; \
 	} else { \
 		_key = seed; \

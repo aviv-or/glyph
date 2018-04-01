@@ -18,6 +18,8 @@ add_library(glp
         FFT/FFT_includes.h
         aes/aes_ctr.c
         aes/aes_core.c
+        randombytes/randombytes.c
+        randombytes/randombytes.h
         glp.c
         glp.h
         sha256.c

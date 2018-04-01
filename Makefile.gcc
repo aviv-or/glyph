@@ -2,8 +2,8 @@
 # Makefile for static library.
 #############################################################
 #set your own environment option
-CC = clang
-CC_FLAG = -O3 -Wall -Wextra -std=gnu99 -pedantic -Wfatal-errors -DGLP_N=1024
+CC = gcc
+CC_FLAG = -O3 -Wall -Wextra -std=gnu99 -pedantic -Wfatal-errors -DGLP_N=1024 -fPIC
 
 
 #set your inc and lib
@@ -12,7 +12,7 @@ LIB =
 
 #make target lib and relevant obj
 PRG = libglyph.a
-SRCS = glp.c glyph.c glp_utils.c glp_rand.c sha256.c glp_rand_openssl_aes.c FFT/FFT_1024_59393.c aes/aes_core.c aes/aes_ctr.c
+SRCS = glp.c randombytes/randombytes.c glyph.c glp_utils.c glp_rand.c sha256.c glp_rand_openssl_aes.c FFT/FFT_1024_59393.c aes/aes_core.c aes/aes_ctr.c
 OBJ := ${SRCS:.c=.o}
 
 #all target
