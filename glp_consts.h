@@ -12,11 +12,7 @@
 #define HEADER_GLP_CONSTS_H
 
 #ifndef RINGELT
-#if __x86_64__
 #define RINGELT uint_fast64_t
-#else
-#define RINGELT uint_fast16_t
-#endif
 #endif
 
 #define RINGELT_BYTES 2

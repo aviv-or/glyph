@@ -5,17 +5,9 @@
 #include <stdlib.h>
 #include <string.h>	
 
-#if __x86_64__
 #define FFTLONG uint_fast64_t
-#else
-#define FFTLONG uint_fast32_t
-#endif
 #define PRIdFFTLONG PRIdFAST32
-#if __x86_64__
 #define FFTSHORT uint_fast64_t
-#else
-#define FFTSHORT uint_fast16_t
-#endif
 #define PRIdFFTSHORT PRIdFAST16
 		
 
