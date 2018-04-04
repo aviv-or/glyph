@@ -3,12 +3,12 @@
 #############################################################
 #set your own environment option
 CC = emcc
-CC_FLAG = -O3 -Wall -Wextra -std=gnu99 -pedantic -Wfatal-errors -DGLP_N=1024
-INC = -I/usr/include -L/usr/lib
+CC_FLAG = -O3 -Wall -Wextra -std=gnu99 -pedantic -Wfatal-errors -DGLP_N=1024 -fPIC
 #static library use 'ar' command
 AR = ar
 
 #set your inc and lib
+INC =
 LIB =
 
 #make target lib and relevant obj
